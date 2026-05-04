@@ -35,7 +35,7 @@ def submit():
     try:
         conn = get_db()
         cur = conn.cursor()
-        cur.execute("INSERT INTO emails (email) VALUES (%s)", (email,))
+        cur.execute("INSERT INTO emails (email_address) VALUES (%s)", (email,))
         conn.commit()
         cur.close()
         conn.close()
