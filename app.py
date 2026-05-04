@@ -26,7 +26,7 @@ def submit():
     email = request.form.get("email", "").strip().lower()
 
     if not email or "@" not in email:
-        return redirect(url_for("invalid"))
+        return redirect(url_for("index"))
 
     try:
         conn = get_db()
@@ -37,9 +37,9 @@ def submit():
         conn.close()
         return redirect(url_for("success"))
     except psycopg2.errors.UniqueViolation:
-        return redirect(url_for("duplicate"))
+        return redirect(url_for("already_registered"))
     except Exception:
-        return redirect(url_for("error"))
+        return redirect(url_for("index"))
 
 
 @app.route("/success")
@@ -47,19 +47,9 @@ def success():
     return render_template("success.html")
 
 
-@app.route("/duplicate")
-def duplicate():
-    return render_template("duplicate.html")
-
-
-@app.route("/invalid")
-def invalid():
-    return render_template("invalid.html")
-
-
-@app.route("/error")
-def error():
-    return render_template("error.html")
+@app.route("/already-registered")
+def already_registered():
+    return render_template("already-registered.html")
 
 
 if __name__ == "__main__":
