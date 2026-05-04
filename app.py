@@ -1,4 +1,5 @@
 import os
+import re
 
 import psycopg2
 from dotenv import load_dotenv
@@ -21,11 +22,14 @@ def index():
     return render_template("index.html")
 
 
+EMAIL_RE = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+
+
 @app.route("/submit", methods=["POST"])
 def submit():
     email = request.form.get("email", "").strip().lower()
 
-    if not email or "@" not in email:
+    if not email or not EMAIL_RE.match(email) or len(email) > 254:
         return redirect(url_for("index"))
 
     try:
@@ -54,4 +58,4 @@ def already_registered():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5001))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(port=port, debug=True)
